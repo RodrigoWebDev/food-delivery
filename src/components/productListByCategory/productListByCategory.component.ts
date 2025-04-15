@@ -45,20 +45,33 @@ export class ProductListCategory implements OnInit {
     this.isLoadingCategories.set(false);
   }
 
+  setActiveCategory(category: string) {
+    const categories = this.categories();
+    const updatedCategories = categories.map((item) => ({
+      ...item,
+      isActive: item.name === category,
+    }));
+
+    this.categories.set(updatedCategories);
+  }
+
   async getProcutsByCategory(category: string) {
+    this.setActiveCategory(category);
     this.isLoadingProducts.set(true);
 
     const res = await fetch(`${apiBaseUrl}/filter.php?c=${category}`);
     const resJson = await res.json();
 
     this.products.set(
-      resJson.meals.map((item: any) => ({
-        id: item.idMeal,
-        name: item.strMeal,
-        img: item.strMealThumb,
-        description: item.strInstructions,
-        price: 100,
-      }))
+      resJson.meals.map((item: any) => {
+        return {
+          id: item.idMeal,
+          name: item.strMeal,
+          img: item.strMealThumb,
+          description: item.strInstructions,
+          price: 100,
+        };
+      })
     );
 
     this.isLoadingProducts.set(false);
