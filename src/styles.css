@@ -1,7 +1,7 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+@plugin "daisyui";
 
-@theme {
-  --color-primary: oklch(0.6 0.23 25.51);
-  --color-primary-content: white;
+@plugin "daisyui" {
+  themes: halloween --default;
 }

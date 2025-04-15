@@ -1,29 +1,31 @@
 @if (isLoadingCategories()) {
 <div class="flex items-center justify-center mt-8">
-  <Icon name="loader" [size]="100" className="fill-primary" />
+  <span class="loading loading-spinner loading-xl"></span>
 </div>
 } @else {
-<ul
-  class="flex overflow-auto text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400 list-none"
->
+<div role="tablist" class="tabs tabs-box mb-8 flex-nowrap! overflow-auto">
   @for (item of categories(); track item.id) {
-  <li class="me-2 cursor-pointer" (click)="getProcutsByCategory(item.name)">
-    <span
-      class="inline-block p-4 text-primary-content bg-primary rounded-t-lg"
-      >{{ item.name }}</span
-    >
-  </li>
+  <div
+    role="tab"
+    [ngClass]="`${item.isActive ? 'tab-active' : ''} tab`"
+    (click)="getProcutsByCategory(item.name)"
+  >
+    {{ item.name }}
+  </div>
   }
-</ul>
+</div>
 
 @if (isLoadingProducts()) {
 <div class="flex items-center justify-center mt-8">
-  <Icon name="loader" [size]="100" className="fill-primary" />
+  <span class="loading loading-spinner loading-xl"></span>
 </div>
 } @else {
-<div class="flex items-start justify-center flex-wrap gap-3">
+<div class="mb-8">
+  Showing <strong>{{ products().length }}</strong> items
+</div>
+<div class="flex items-start justify-center flex-wrap gap-[1%]">
   @for (item of products(); track item.id) {
-  <div class="w-[32%]">
+  <div class="w-full sm:w-[49%] md:w-[32%] mb-8">
     <ProductCard
       [name]="item.name"
       [description]="item.description"

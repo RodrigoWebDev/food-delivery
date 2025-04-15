@@ -1,16 +1,19 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { ProductCard } from '../productCard/productCard.component';
 import { apiBaseUrl } from '../../constants';
-import { SimpleCard } from '../simpleCard/simpleCard.component';
-import { Icon } from '../icon/icon.component';
+import { NgClass } from '@angular/common';
 
-interface ICategory {
+interface IBase {
   id: string;
   name: string;
   description: string;
 }
 
-interface IProduct extends ICategory {
+interface ICategory extends IBase {
+  isActive: boolean;
+}
+
+interface IProduct extends IBase {
   price: number;
   img: string;
 }
@@ -18,7 +21,7 @@ interface IProduct extends ICategory {
 @Component({
   selector: 'ProductListCategory',
   templateUrl: './productListByCategory.component.html',
-  imports: [ProductCard, SimpleCard, Icon],
+  imports: [ProductCard, NgClass],
 })
 export class ProductListCategory implements OnInit {
   categories = signal<ICategory[]>([]);
@@ -35,6 +38,7 @@ export class ProductListCategory implements OnInit {
         id: item.idCategory,
         name: item.strCategory,
         description: item.strCategoryDescription,
+        isActive: false,
       }))
     );
 
@@ -60,8 +64,16 @@ export class ProductListCategory implements OnInit {
     this.isLoadingProducts.set(false);
   }
 
+  setFirstCategoryAsActive() {
+    const categories = this.categories();
+    categories[0].isActive = true;
+
+    this.categories.set(categories);
+  }
+
   async ngOnInit(): Promise<void> {
     await this.getCategories();
+    this.setFirstCategoryAsActive();
     this.getProcutsByCategory(this.categories()[0].name);
   }
 }
