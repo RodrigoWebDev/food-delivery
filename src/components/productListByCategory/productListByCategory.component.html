@@ -1,0 +1,30 @@
+@if (isLoadingCategories()) {
+<div class="flex items-center justify-center mt-8">
+  <Icon name="loader" [size]="100" className="fill-primary" />
+</div>
+} @else {
+<ul
+  class="flex overflow-auto text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400 list-none"
+>
+  @for (item of categories(); track item.id) {
+  <li class="me-2 cursor-pointer">
+    <span
+      class="inline-block p-4 text-primary-content bg-primary rounded-t-lg"
+      >{{ item.name }}</span
+    >
+  </li>
+  }
+</ul>
+}
+
+<div class="flex items-start justify-center flex-wrap gap-3">
+  @for (item of products(); track item.id) {
+  <div class="w-[32%]">
+    <ProductCard
+      [name]="item.name"
+      [description]="item.description"
+      [img]="item.img"
+    />
+  </div>
+  }
+</div>
