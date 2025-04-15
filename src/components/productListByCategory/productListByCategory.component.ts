@@ -24,6 +24,7 @@ export class ProductListCategory implements OnInit {
   categories = signal<ICategory[]>([]);
   products = signal<IProduct[]>([]);
   isLoadingCategories = signal(false);
+  isLoadingProducts = signal(false);
 
   async getCategories() {
     this.isLoadingCategories.set(true);
@@ -40,13 +41,14 @@ export class ProductListCategory implements OnInit {
     this.isLoadingCategories.set(false);
   }
 
-  async ngOnInit(): Promise<void> {
-    this.getCategories();
-    const res = await fetch(`${apiBaseUrl}/filter.php?c=Seafood`);
-    const resProducts = await res.json();
+  async getProcutsByCategory(category: string) {
+    this.isLoadingProducts.set(true);
+
+    const res = await fetch(`${apiBaseUrl}/filter.php?c=${category}`);
+    const resJson = await res.json();
 
     this.products.set(
-      resProducts.meals.map((item: any) => ({
+      resJson.meals.map((item: any) => ({
         id: item.idMeal,
         name: item.strMeal,
         img: item.strMealThumb,
@@ -54,5 +56,12 @@ export class ProductListCategory implements OnInit {
         price: 100,
       }))
     );
+
+    this.isLoadingProducts.set(false);
+  }
+
+  async ngOnInit(): Promise<void> {
+    await this.getCategories();
+    this.getProcutsByCategory(this.categories()[0].name);
   }
 }
